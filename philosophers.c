@@ -1,0 +1,108 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philosophers.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/22 10:31:39 by ielouarr          #+#    #+#             */
+/*   Updated: 2025/04/29 13:44:21 by ielouarr         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "philosophers.h"
+
+void	philo_spawner(t_global *args)
+{
+	int		i;
+	t_philo	*philo;
+	
+	args->start = getting_curr_time(); // millisecond
+	while(i < args->philosophers_nb)
+	{
+		philo = &args->philosophers[i];
+		philo->philo_id = i;
+		philo->right_fork = i;
+		philo->left_fork = (i + 1) % args->philosophers_nb;
+		pthread_mutex_lock(&args->meal); // lock to set
+		philo->meals_nb = 0;
+		philo->last_meal = getting_curr_time();
+		pthread_mutex_unlock(&args->meal); // unlock after set
+		philo->args = args;
+		ft_thread_error_handler(&philo->thread, philo_routine, philo, CREATE);
+		ft_thread_error_handler(args->philosophers[i].thread,NULL , NULL, DETACH);
+		i++;
+	}
+}
+void	*philo_routine(void *data)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)data;
+	if(philo->philo_id % 2) // sleep odd philos for protect our routine from deadlock
+		ft_usleep(philo->args->time_to_eat);
+	while(getting_curr_time() < philo->last_meal + philo->args->time_to_die)
+	{
+		ft_mutex_error_handler(&philo->args->forks[philo->right_fork], LOCK); // catch the right fork and lock it
+		dispaly_action("has taken a fork", philo);
+		ft_mutex_error_handler(&philo->args->forks[philo->left_fork], LOCK);// catch the left fork and lock it
+		dispaly_action("has taken a fork", philo);
+		dispaly_action("is eating", philo);
+		ft_mutex_error_handler(&philo->args->meal, LOCK);
+		philo->last_meal = getting_curr_time();
+		philo->meals_nb++;
+		ft_mutex_error_handler(&philo->args, UNLOCK);
+		ft_usleep(philo->args->time_to_die);
+		ft_mutex_error_handler(&philo->args->forks[philo->left_fork], UNLOCK);
+		ft_mutex_error_handler(&philo->args->forks[philo->right_fork], UNLOCK);
+		dispaly_action("is sleeping", philo);
+		ft_usleep(philo->args->time_to_sleep);
+		dispaly_action("is thinking", philo);
+	}
+	return (NULL);
+}
+
+int		all_philos_eating(t_global *args)
+{
+	int philo_n;
+	int	i;
+
+	philo_n = 0;
+	i = 0;
+	while(i < args->philosophers_nb)
+	{
+		ft_mutex_error_handler(&args->meal, LOCK);
+		if(args->philosophers[i].meals_nb >= args->must_eat)
+			philo_n++;
+		ft_mutex_error_handler(&args->meal, UNLOCK);
+		i++;
+	}
+	return (philo_n == args->philosophers_nb);
+}
+
+void	monitoring(t_global *args)
+{
+	int				i;
+	time_t	last_meal;
+	
+	while(1337)
+	{
+		if(args->must_eat && all_philos_eating(args));
+			return ;
+		i = 0;
+		while (i < args->philosophers_nb)
+		{
+			ft_mutex_error_handler(&args->meal, LOCK);
+			last_meal = args->philosophers[i].last_meal;
+			ft_mutex_error_handler(&args->meal, UNLOCK);
+			if (getting_curr_time() >= last_meal + args->time_to_die)
+			{
+				ft_mutex_error_handler(&args->print, LOCK);
+				printf("%ld  %d died\n", getting_curr_time() - args->start, i + 1);
+				ft_usleep(500);
+				return ;
+			}
+			i++;
+		}
+	}
+}

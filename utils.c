@@ -1,0 +1,74 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/22 10:32:35 by ielouarr          #+#    #+#             */
+/*   Updated: 2025/04/24 17:01:25 by ielouarr         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "philosophers.h"
+
+void	dispaly_action(char *action, t_philo *philo)
+{
+	t_global	*args;
+
+	args = philo->args;
+	pthread_mutex_lock(&args->print);
+	printf("%ld %d %s\n", get_time() - args->start, philo->philo_id + 1, action);
+	pthread_mutex_unlock(&args->print);
+}
+
+void    ft_error(const char *str)
+{
+    int i;
+
+    i = 0;
+    while(str[i])
+        write(2, &str[i], 1);
+    return(-1);
+}
+
+long	getting_curr_time(void)
+{
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return ((long)(time.tv_sec * 1000) + (time.tv_usec / 1000));
+}
+
+void	ft_usleep(time_t time)
+{
+	time_t	start;
+
+	start = get_time();
+	while (get_time() < start + time)
+		usleep(500);
+}
+
+long	ft_atol(const char *str)
+{
+	int		i;
+	int		sign;
+	unsigned long long	result;
+
+	i = 0;
+	result = 0;
+	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			sign *= -1;
+		
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		result = (result * 10) + (str[i] - '0');
+		i++;
+	}
+	return ((long)result * sign);
+}
