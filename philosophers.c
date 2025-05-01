@@ -6,17 +6,63 @@
 /*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:31:39 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/04/29 13:44:21 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/01 13:54:04 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
+void	*philo_routine(void *data)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)data;
+	if(philo->philo_id % 2) // sleep odd philos for protect our routine from deadlock
+		ft_usleep(philo->args->time_to_eat / 2);
+	
+	while(1)
+	{
+		ft_mutex_error_handler(&philo->args->forks[philo->right_fork], LOCK); // catch the right fork and lock it
+		dispaly_action("has taken a fork", philo);
+		
+		// Handle case with only one philosopher
+		if (philo->args->philosophers_nb == 1)
+		{
+			ft_usleep(philo->args->time_to_die);
+			ft_mutex_error_handler(&philo->args->forks[philo->right_fork], UNLOCK);
+			break;
+		}
+		
+		ft_mutex_error_handler(&philo->args->forks[philo->left_fork], LOCK);// catch the left fork and lock it
+		dispaly_action("has taken a fork", philo);
+		dispaly_action("is eating", philo);
+		
+		ft_mutex_error_handler(&philo->args->meal, LOCK);
+		philo->last_meal = getting_curr_time();
+		philo->meals_nb++;
+		
+		if (philo->args->must_eat > 0 && philo->meals_nb >= philo->args->must_eat)
+			philo->it_is_full = true;
+			
+		ft_mutex_error_handler(&philo->args->meal, UNLOCK);
+		
+		ft_usleep(philo->args->time_to_eat);
+		
+		ft_mutex_error_handler(&philo->args->forks[philo->left_fork], UNLOCK);
+		ft_mutex_error_handler(&philo->args->forks[philo->right_fork], UNLOCK);
+		
+		dispaly_action("is sleeping", philo);
+		ft_usleep(philo->args->time_to_sleep);
+		dispaly_action("is thinking", philo);
+	}
+	return (NULL);
+}
 void	philo_spawner(t_global *args)
 {
 	int		i;
 	t_philo	*philo;
 	
+	i = 0;
 	args->start = getting_curr_time(); // millisecond
 	while(i < args->philosophers_nb)
 	{
@@ -29,37 +75,10 @@ void	philo_spawner(t_global *args)
 		philo->last_meal = getting_curr_time();
 		pthread_mutex_unlock(&args->meal); // unlock after set
 		philo->args = args;
-		ft_thread_error_handler(&philo->thread, philo_routine, philo, CREATE);
-		ft_thread_error_handler(args->philosophers[i].thread,NULL , NULL, DETACH);
+		ft_thread_error_handler(&philo->thread, philo_routine, philo, CREATE_THREAD);
+		ft_thread_error_handler(&args->philosophers[i].thread,NULL , NULL, DETACH_THREAD);
 		i++;
 	}
-}
-void	*philo_routine(void *data)
-{
-	t_philo	*philo;
-
-	philo = (t_philo *)data;
-	if(philo->philo_id % 2) // sleep odd philos for protect our routine from deadlock
-		ft_usleep(philo->args->time_to_eat);
-	while(getting_curr_time() < philo->last_meal + philo->args->time_to_die)
-	{
-		ft_mutex_error_handler(&philo->args->forks[philo->right_fork], LOCK); // catch the right fork and lock it
-		dispaly_action("has taken a fork", philo);
-		ft_mutex_error_handler(&philo->args->forks[philo->left_fork], LOCK);// catch the left fork and lock it
-		dispaly_action("has taken a fork", philo);
-		dispaly_action("is eating", philo);
-		ft_mutex_error_handler(&philo->args->meal, LOCK);
-		philo->last_meal = getting_curr_time();
-		philo->meals_nb++;
-		ft_mutex_error_handler(&philo->args, UNLOCK);
-		ft_usleep(philo->args->time_to_die);
-		ft_mutex_error_handler(&philo->args->forks[philo->left_fork], UNLOCK);
-		ft_mutex_error_handler(&philo->args->forks[philo->right_fork], UNLOCK);
-		dispaly_action("is sleeping", philo);
-		ft_usleep(philo->args->time_to_sleep);
-		dispaly_action("is thinking", philo);
-	}
-	return (NULL);
 }
 
 int		all_philos_eating(t_global *args)
@@ -87,7 +106,7 @@ void	monitoring(t_global *args)
 	
 	while(1337)
 	{
-		if(args->must_eat && all_philos_eating(args));
+		if(args->must_eat && all_philos_eating(args))
 			return ;
 		i = 0;
 		while (i < args->philosophers_nb)
@@ -104,5 +123,6 @@ void	monitoring(t_global *args)
 			}
 			i++;
 		}
+		ft_usleep(1); // Prevent CPU thrashing in the monitoring loop
 	}
 }

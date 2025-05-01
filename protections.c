@@ -6,7 +6,7 @@
 /*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:36:26 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/04/22 11:42:49 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/04/30 14:03:50 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static void	handle_thread_status_error(int status, t_thread_code opcode)
 {
 	if (status == 0)
 		return;
-	if (status == EINVAL && (JOIN == opcode || DETACH == opcode))
+	if (status == EINVAL && (opcode == JOIN_THREAD || opcode == DETACH_THREAD))
 		ft_error("Invalid thread or thread not joinable");
 	else if (status == EDEADLK)
 		ft_error("Deadlock detected on thread join");
@@ -78,11 +78,11 @@ static void	handle_thread_status_error(int status, t_thread_code opcode)
 void	ft_thread_error_handler(pthread_t *thread, void *(*routine)(void *),
 	void *arg, t_thread_code opcode)
 {
-	if (CREATE == opcode)
+	if (opcode == CREATE_THREAD)
 		handle_thread_status_error(pthread_create(thread, NULL, routine, arg), opcode);
-	else if (JOIN == opcode)
+	else if (opcode == JOIN_THREAD)
 		handle_thread_status_error(pthread_join(*thread, NULL), opcode);
-	else if (DETACH == opcode)
+	else if (opcode == DETACH_THREAD)
 		handle_thread_status_error(pthread_detach(*thread), opcode);
 	else
 		ft_error("Invalid thread opcode");

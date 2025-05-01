@@ -6,7 +6,7 @@
 /*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:32:35 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/04/24 17:01:25 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/01 13:51:11 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,14 @@ void	dispaly_action(char *action, t_philo *philo)
 
 	args = philo->args;
 	pthread_mutex_lock(&args->print);
-	printf("%ld %d %s\n", get_time() - args->start, philo->philo_id + 1, action);
+	printf("%ld %d %s\n", getting_curr_time() - args->start, philo->philo_id + 1, action);
 	pthread_mutex_unlock(&args->print);
 }
 
-void    ft_error(const char *str)
+int    ft_error(const char *str)
 {
-    int i;
-
-    i = 0;
-    while(str[i])
-        write(2, &str[i], 1);
-    return(-1);
+	printf("%s\n", str);
+	return(1);
 }
 
 long	getting_curr_time(void)
@@ -44,8 +40,8 @@ void	ft_usleep(time_t time)
 {
 	time_t	start;
 
-	start = get_time();
-	while (get_time() < start + time)
+	start = getting_curr_time();
+	while (getting_curr_time() < start + time)
 		usleep(500);
 }
 
@@ -56,6 +52,7 @@ long	ft_atol(const char *str)
 	unsigned long long	result;
 
 	i = 0;
+	sign = 1;
 	result = 0;
 	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
 		i++;
