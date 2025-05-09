@@ -6,7 +6,7 @@
 /*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:32:35 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/01 13:51:11 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:18:30 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ long	ft_atol(const char *str)
 	{
 		if (str[i] == '-')
 			sign *= -1;
-		
+		i++;
 	}
 	while (str[i] >= '0' && str[i] <= '9')
 	{

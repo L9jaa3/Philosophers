@@ -6,7 +6,7 @@
 /*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 12:31:31 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/01 13:42:05 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:46:39 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,10 @@ typedef struct s_global
 	time_t     			start;
 	pthread_mutex_t		meal;
 	pthread_mutex_t		print;
+	pthread_mutex_t		status;
 	pthread_mutex_t     forks[200];
 	t_philo             philosophers[200];
-	
+	bool				simulation_end;
 } t_global;
 
 //operator codes for mutex 
@@ -88,5 +89,7 @@ void	*ft_malloc(size_t size);
 void	ft_mutex_error_handler(pthread_mutex_t *mutex, t_mutex_codes opcode);
 void	ft_thread_error_handler(pthread_t *thread, void *(*routine)(void *),
 	void *arg, t_thread_code opcode);
+void	end_simulation(t_global *args);
+bool	is_simulation_ended(t_global *args);
 
 #endif

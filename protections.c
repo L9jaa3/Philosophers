@@ -6,7 +6,7 @@
 /*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:36:26 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/04/30 14:03:50 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/09 14:20:42 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static void	handle_thread_status_error(int status, t_thread_code opcode)
 		ft_error("No thread found with that ID");
 	else if (status == EPERM)
 		ft_error("Thread cannot be joined or detached");
-	else if (status == ENOMEM && CREATE == opcode)
+	else if (status == ENOMEM && opcode == CREATE_THREAD)
 		ft_error("Not enough memory to create thread");
 	else
 		ft_error("Unknown thread error");

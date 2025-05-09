@@ -6,7 +6,7 @@
 /*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:31:45 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/08 15:58:18 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:59:54 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,9 @@ t_global *ft_store_args(int ac, char **av)
 int main(int ac, char **av)
 {
     t_global *args;
-
+    int i;
+    
+    args = NULL;
     if (ac < 5 || ac > 6)
     {
         ft_error("Error: incorrect number of arguments");
@@ -64,10 +66,20 @@ int main(int ac, char **av)
     args = ft_store_args(ac, av);
     if (!args)
         return (1);
-        
+    
+    args->simulation_end = false;
     mutex_init(args);
     philo_spawner(args);
     monitoring(args);
+    ft_usleep(50);
+
+    //join all philosopher threads
+    i = 0;
+    while(i < args->philosophers_nb)
+    {
+        ft_thread_error_handler(&args->philosophers[i].thread, NULL, NULL, JOIN_THREAD);
+        i++;
+    }
     destroy_mutex(args);
     free(args);
     

@@ -7,7 +7,8 @@ SRC = main.c \
       mutex_funs.c \
       philosophers.c \
       protections.c \
-      utils.c
+      utils.c \
+	  helpers.c
 
 OBJ = $(SRC:.c=.o)
 
