@@ -6,7 +6,7 @@
 /*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:32:35 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/09 15:18:30 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/10 18:12:15 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,13 @@ void	dispaly_action(char *action, t_philo *philo)
 	t_global	*args;
 
 	args = philo->args;
-	pthread_mutex_lock(&args->print);
-	printf("%ld %d %s\n", getting_curr_time() - args->start, philo->philo_id + 1, action);
-	pthread_mutex_unlock(&args->print);
+	if(is_simulation_ended(args))
+		return ;
+	
+	ft_mutex_error_handler(&args->print, LOCK);
+	if(!is_simulation_ended(args))
+		printf("%ld %d %s\n", getting_curr_time() - args->start, philo->philo_id + 1, action);
+	ft_mutex_error_handler(&args->print, UNLOCK);
 }
 
 int    ft_error(const char *str)
@@ -41,8 +45,16 @@ void	ft_usleep(time_t time)
 	time_t	start;
 
 	start = getting_curr_time();
-	while (getting_curr_time() < start + time)
-		usleep(500);
+	if (time < 10)
+	{
+		while (getting_curr_time() < start + time)
+			usleep(100);
+	}
+	else
+	{
+		while (getting_curr_time() < start + time)
+			usleep(200);
+	}
 }
 
 long	ft_atol(const char *str)

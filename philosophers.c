@@ -6,7 +6,7 @@
 /*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:31:39 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/09 15:56:42 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/10 22:21:21 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,10 @@ void	*philo_routine(void *data)
 		// Handle case with only one philosopher
 		if (philo->args->philosophers_nb == 1)
 		{
+			dispaly_action("is thinking", philo);
 			ft_usleep(philo->args->time_to_die);
 			ft_mutex_error_handler(&philo->args->forks[philo->right_fork], UNLOCK);
-			break;
+			return (NULL);
 		}
 		
 		//check simulation_end again before locking more mutexes
@@ -136,7 +137,7 @@ void	monitoring(t_global *args)
 	{
 		if(args->must_eat && all_philos_eating(args))
 		{
-			args->simulation_end = true;
+			end_simulation(args);
 			return ;
 		}
 		i = 0;
