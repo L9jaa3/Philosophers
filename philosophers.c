@@ -6,7 +6,7 @@
 /*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:31:39 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/10 22:21:21 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/11 16:21:18 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,36 +126,4 @@ int		all_philos_eating(t_global *args)
 		i++;
 	}
 	return (philo_n == args->philosophers_nb);
-}
-
-void	monitoring(t_global *args)
-{
-	int				i;
-	time_t	last_meal;
-	
-	while(!is_simulation_ended(args))
-	{
-		if(args->must_eat && all_philos_eating(args))
-		{
-			end_simulation(args);
-			return ;
-		}
-		i = 0;
-		while (i < args->philosophers_nb)
-		{
-			ft_mutex_error_handler(&args->meal, LOCK);
-			last_meal = args->philosophers[i].last_meal;
-			ft_mutex_error_handler(&args->meal, UNLOCK);
-			if (getting_curr_time() >= last_meal + args->time_to_die)
-			{
-				ft_mutex_error_handler(&args->print, LOCK);
-				printf("%ld  %d died\n", getting_curr_time() - args->start, i + 1);
-				ft_mutex_error_handler(&args->print, UNLOCK);
-				end_simulation(args);
-				return ;
-			}
-			i++;
-		}
-		ft_usleep(1); // Prevent CPU thrashing in the monitoring loop
-	}
 }

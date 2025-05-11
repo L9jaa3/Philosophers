@@ -8,7 +8,8 @@ SRC = main.c \
       philosophers.c \
       protections.c \
       utils.c \
-	  helpers.c
+	  helpers.c \
+	  monitoring.c
 
 OBJ = $(SRC:.c=.o)
 
