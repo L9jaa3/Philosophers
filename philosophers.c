@@ -6,7 +6,7 @@
 /*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:31:39 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/11 16:21:18 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/11 18:12:03 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@ void	*philo_routine(void *data)
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
-	if(philo->philo_id % 2) // sleep odd philos for protect our routine from deadlock
+	if(philo->philo_id % 2) 
 		ft_usleep(philo->args->time_to_eat / 2);
 	
-	while(!is_simulation_ended(philo->args)) // Check simulation_end before each iteration
+	while(!is_simulation_ended(philo->args))
 	{
-		if (is_simulation_ended(philo->args)) // Check simulation_end before locking mutexes
+		if (is_simulation_ended(philo->args))
 			break;
 		
-		ft_mutex_error_handler(&philo->args->forks[philo->right_fork], LOCK); // catch the right fork and lock it
+		ft_mutex_error_handler(&philo->args->forks[philo->right_fork], LOCK);
 		
 		if (is_simulation_ended(philo->args))
 		{
@@ -33,16 +33,13 @@ void	*philo_routine(void *data)
 			break;
 		}
 		dispaly_action("has taken a fork", philo);
-		// Handle case with only one philosopher
 		if (philo->args->philosophers_nb == 1)
 		{
-			dispaly_action("is thinking", philo);
 			ft_usleep(philo->args->time_to_die);
 			ft_mutex_error_handler(&philo->args->forks[philo->right_fork], UNLOCK);
 			return (NULL);
 		}
 		
-		//check simulation_end again before locking more mutexes
 		if (is_simulation_ended(philo->args))
 		{
 			ft_mutex_error_handler(&philo->args->forks[philo->right_fork], UNLOCK);
@@ -72,15 +69,13 @@ void	*philo_routine(void *data)
 		
 		ft_mutex_error_handler(&philo->args->forks[philo->left_fork], UNLOCK);
 		ft_mutex_error_handler(&philo->args->forks[philo->right_fork], UNLOCK);
-		
-		// check simulation_end before sleeping
+
 		if (is_simulation_ended(philo->args))
 			break;
 
 		dispaly_action("is sleeping", philo);
 		ft_usleep(philo->args->time_to_sleep);
 		
-		// check simulation_end before thinking
 		if (is_simulation_ended(philo->args))
 			break;
 		dispaly_action("is thinking", philo);
@@ -93,37 +88,19 @@ void	philo_spawner(t_global *args)
 	t_philo	*philo;
 	
 	i = 0;
-	args->start = getting_curr_time(); // millisecond
+	args->start = getting_curr_time();
 	while(i < args->philosophers_nb)
 	{
 		philo = &args->philosophers[i];
 		philo->philo_id = i;
 		philo->right_fork = i;
 		philo->left_fork = (i + 1) % args->philosophers_nb;
-		pthread_mutex_lock(&args->meal); // lock to set
+		pthread_mutex_lock(&args->meal);
 		philo->meals_nb = 0;
 		philo->last_meal = getting_curr_time();
-		pthread_mutex_unlock(&args->meal); // unlock after set
+		pthread_mutex_unlock(&args->meal);
 		philo->args = args;
 		ft_thread_error_handler(&philo->thread, philo_routine, philo, CREATE_THREAD);
 		i++;
 	}
-}
-
-int		all_philos_eating(t_global *args)
-{
-	int philo_n;
-	int	i;
-
-	philo_n = 0;
-	i = 0;
-	while(i < args->philosophers_nb)
-	{
-		ft_mutex_error_handler(&args->meal, LOCK);
-		if(args->philosophers[i].meals_nb >= args->must_eat)
-			philo_n++;
-		ft_mutex_error_handler(&args->meal, UNLOCK);
-		i++;
-	}
-	return (philo_n == args->philosophers_nb);
 }
