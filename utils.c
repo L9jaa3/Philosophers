@@ -6,7 +6,7 @@
 /*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:32:35 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/11 18:29:08 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/11 22:24:29 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,8 @@ void	ft_usleep(time_t time)
 	time_t	start;
 
 	start = getting_curr_time();
-	if (time < 10)
-	{
-		while (getting_curr_time() < start + time)
-			usleep(100);
-	}
-	else
-	{
-		while (getting_curr_time() < start + time)
-			usleep(200);
-	}
+	while (getting_curr_time() < start + time)
+			usleep(250);
 }
 
 long	ft_atol(const char *str)
