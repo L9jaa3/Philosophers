@@ -6,7 +6,7 @@
 /*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:31:45 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/11 18:19:20 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:45:48 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_global *ft_store_args(int ac, char **av)
 	return (args);
 }
 
-void    start_working_mfs(t_global *args)
+static	void    start_working(t_global *args)
 {
 	int i;
 
@@ -83,6 +83,6 @@ int main(int ac, char **av)
 	args = ft_store_args(ac, av);
 	if (!args)
 		return (1);
-	start_working_mfs(args);
+	start_working(args);
 	return (0);
 }

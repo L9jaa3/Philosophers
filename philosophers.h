@@ -6,7 +6,7 @@
 /*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 12:31:31 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/11 18:07:32 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:32:20 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 #include <stdio.h>
 #include <string.h>
 
-//philo structure
 typedef struct s_philo
 {
 	int     philo_id;
@@ -36,7 +35,6 @@ typedef struct s_philo
 	struct s_global   *args;
 } t_philo;
 
-//Global Table That we store data on it
 typedef struct s_global
 {
 	long     			philosophers_nb ;
@@ -53,7 +51,6 @@ typedef struct s_global
 	bool				simulation_end;
 } t_global;
 
-//operator codes for mutex 
 typedef enum   e_mutex_codes
 {
 	LOCK,
@@ -65,7 +62,6 @@ typedef enum   e_mutex_codes
 	DETACH,
 }   t_mutex_codes;
 
-//operator codes for threads
 typedef enum e_thread_code
 {
 	CREATE_THREAD,
@@ -73,7 +69,6 @@ typedef enum e_thread_code
 	DETACH_THREAD
 }	t_thread_code;
 
-//utils funs
 long    ft_atol(const char *str);
 int    ft_error(const char *str);
 void	dispaly_action(char *action, t_philo *philo);
@@ -84,7 +79,6 @@ void	destroy_mutex(t_global *args);
 void	philo_spawner(t_global *args);
 void	monitoring(t_global *args);
 
-//protections funs
 void	*ft_malloc(size_t size);
 void	ft_mutex_error_handler(pthread_mutex_t *mutex, t_mutex_codes opcode);
 void	ft_thread_error_handler(pthread_t *thread, void *(*routine)(void *),

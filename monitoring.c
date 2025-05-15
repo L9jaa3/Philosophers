@@ -6,7 +6,7 @@
 /*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 16:20:00 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/11 18:08:29 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:38:46 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,10 @@ static bool	check_philosopher_death(t_philo *philo)
 	ft_mutex_error_handler(&philo->args->meal, LOCK);
 	current_time = getting_curr_time();
 	time_since_last_meal = current_time - philo->last_meal;
-	
 	if (time_since_last_meal > philo->args->time_to_die)
 	{
 		ft_mutex_error_handler(&philo->args->meal, UNLOCK);
-		
-		// Announce death and end simulation
-		ft_mutex_error_handler(&philo->args->print, LOCK);
-		printf("%ld %d died\n", getting_curr_time() - philo->args->start, 
-			philo->philo_id + 1);
-		ft_mutex_error_handler(&philo->args->print, UNLOCK);
-		
+		dispaly_action("died", philo);
 		end_simulation(philo->args);
 		return (true);
 	}
@@ -87,6 +80,6 @@ void	monitoring(t_global *args)
 		if (!simulation_ended && check_all_philosophers_ate(args))
 			simulation_ended = true;
 			
-		usleep(1000); // Sleep 1ms to avoid high CPU usage
+		usleep(1000);
 	}
 }

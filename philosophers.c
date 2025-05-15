@@ -6,7 +6,7 @@
 /*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:31:39 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/11 22:19:33 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/15 20:22:51 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,8 @@ void	philo_spawner(t_global *args)
 		philo->philo_id = i;
 		philo->right_fork = i;
 		philo->left_fork = (i + 1) % args->philosophers_nb;
-		pthread_mutex_lock(&args->meal);
 		philo->meals_nb = 0;
 		philo->last_meal = getting_curr_time();
-		pthread_mutex_unlock(&args->meal);
 		philo->args = args;
 		ft_thread_error_handler(&philo->thread, philo_routine, philo, CREATE_THREAD);
 		i++;
