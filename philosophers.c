@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ielouarr <ielouarr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:31:39 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/15 20:22:51 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/20 20:39:19 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	*philo_routine(void *data)
 	while (!is_simulation_ended(philo->args))
 	{
 		if (!take_forks(philo))
-			break;
+			break ;
 		eat_sleep_think(philo);
 	}
 	return (NULL);
@@ -80,10 +80,10 @@ void	philo_spawner(t_global *args)
 {
 	int		i;
 	t_philo	*philo;
-	
+
 	i = 0;
 	args->start = getting_curr_time();
-	while(i < args->philosophers_nb)
+	while (i < args->philosophers_nb)
 	{
 		philo = &args->philosophers[i];
 		philo->philo_id = i;
@@ -92,7 +92,8 @@ void	philo_spawner(t_global *args)
 		philo->meals_nb = 0;
 		philo->last_meal = getting_curr_time();
 		philo->args = args;
-		ft_thread_error_handler(&philo->thread, philo_routine, philo, CREATE_THREAD);
+		ft_thread_error_handler
+				(&philo->thread, philo_routine, philo, CREATE_THREAD);
 		i++;
 	}
 }

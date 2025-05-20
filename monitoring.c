@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitoring.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ielouarr <ielouarr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 16:20:00 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/15 17:38:46 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/19 16:36:11 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static bool	check_philosopher_death(t_philo *philo)
 {
 	time_t	current_time;
 	time_t	time_since_last_meal;
-	
+
 	ft_mutex_error_handler(&philo->args->meal, LOCK);
 	current_time = getting_curr_time();
 	time_since_last_meal = current_time - philo->last_meal;
@@ -35,10 +35,9 @@ static bool	check_all_philosophers_ate(t_global *args)
 {
 	int	i;
 	int	full_philosophers;
-	
+
 	if (args->must_eat <= 0)
 		return (false);
-		
 	full_philosophers = 0;
 	i = 0;
 	while (i < args->philosophers_nb)
@@ -49,7 +48,6 @@ static bool	check_all_philosophers_ate(t_global *args)
 		ft_mutex_error_handler(&args->meal, UNLOCK);
 		i++;
 	}
-	
 	if (full_philosophers == args->philosophers_nb)
 	{
 		end_simulation(args);
@@ -62,7 +60,7 @@ void	monitoring(t_global *args)
 {
 	int		i;
 	bool	simulation_ended;
-	
+
 	simulation_ended = false;
 	while (!simulation_ended)
 	{
@@ -72,14 +70,12 @@ void	monitoring(t_global *args)
 			if (check_philosopher_death(&args->philosophers[i]))
 			{
 				simulation_ended = true;
-				break;
+				break ;
 			}
 			i++;
 		}
-		
 		if (!simulation_ended && check_all_philosophers_ate(args))
 			simulation_ended = true;
-			
 		usleep(1000);
 	}
 }
