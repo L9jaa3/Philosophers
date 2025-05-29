@@ -65,7 +65,7 @@ void	start_working_mfs(t_global *args)
 	mutex_init(args);
 	philo_spawner(args);
 	monitoring(args);
-	ft_usleep(50);
+	ft_usleep(50, args);
 	i = 0;
 	while (i < args->philosophers_nb)
 	{

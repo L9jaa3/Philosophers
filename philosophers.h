@@ -73,7 +73,7 @@ long	ft_atol(const char *str);
 int		ft_error(const char *str);
 void	dispaly_action(char *action, t_philo *philo);
 long	getting_curr_time(void);
-void	ft_usleep(time_t time);
+void	ft_usleep(time_t tim, t_global *args);
 void	mutex_init(t_global *args);
 void	destroy_mutex(t_global *args);
 void	philo_spawner(t_global *args);
