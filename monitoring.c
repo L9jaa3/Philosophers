@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitoring.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ielouarr <ielouarr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 16:20:00 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/19 16:36:11 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/29 14:42:17 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,11 @@ static bool	check_philosopher_death(t_philo *philo)
 	if (time_since_last_meal > philo->args->time_to_die)
 	{
 		ft_mutex_error_handler(&philo->args->meal, UNLOCK);
-		dispaly_action("died", philo);
-		end_simulation(philo->args);
+		if(!is_simulation_ended(philo->args))
+		{
+			dispaly_action("died", philo);
+			end_simulation(philo->args);
+		}
 		return (true);
 	}
 	ft_mutex_error_handler(&philo->args->meal, UNLOCK);
@@ -76,6 +79,7 @@ void	monitoring(t_global *args)
 		}
 		if (!simulation_ended && check_all_philosophers_ate(args))
 			simulation_ended = true;
-		usleep(1000);
 	}
+	// if(!simulation_ended)
+	// 	ft_usleep(1000);
 }

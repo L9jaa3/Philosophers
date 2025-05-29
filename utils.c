@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ielouarr <ielouarr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:32:35 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/20 16:25:29 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/29 14:38:29 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,21 @@ long	getting_curr_time(void)
 void	ft_usleep(time_t time)
 {
 	time_t	start;
+	time_t	elapsed;
 
 	start = getting_curr_time();
-	while (getting_curr_time() < start + time)
-		usleep(250);
+	while (1)
+	{
+		elapsed = getting_curr_time() - start;
+		if (elapsed >= time)
+			break;
+		
+		// Use different sleep strategies based on remaining time
+		if (time - elapsed > 10)
+			usleep(1000); // Sleep 1ms if more than 10ms remaining
+		else
+			usleep(100);  // Sleep 100μs for precision at the end
+	}
 }
 
 static long	handle_overflow(int sign, unsigned long long n, int count)
