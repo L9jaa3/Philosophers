@@ -6,7 +6,7 @@
 /*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 16:20:00 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/29 18:34:26 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/30 19:34:05 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,6 @@ void	monitoring(t_global *args)
 		}
 		if (!simulation_ended && check_all_philosophers_ate(args))
 			simulation_ended = true;
-		usleep(1000);
+		
 	}
 }

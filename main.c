@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ielouarr <ielouarr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:31:45 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/19 22:02:23 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/31 20:53:57 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ void	start_working_mfs(t_global *args)
 	mutex_init(args);
 	philo_spawner(args);
 	monitoring(args);
-	ft_usleep(50, args);
 	i = 0;
 	while (i < args->philosophers_nb)
 	{

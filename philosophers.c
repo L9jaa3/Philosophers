@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ielouarr <ielouarr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ielouarr <ielouarr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:31:39 by ielouarr          #+#    #+#             */
-/*   Updated: 2025/05/20 20:39:19 by ielouarr         ###   ########.fr       */
+/*   Updated: 2025/05/31 21:21:39 by ielouarr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@ static void	eat_sleep_think(t_philo *philo)
 		philo->it_is_full = true;
 	ft_mutex_error_handler(&philo->args->meal, UNLOCK);
 	ft_usleep(philo->args->time_to_eat, philo->args);
+	ft_mutex_error_handler(&philo->args->meal, LOCK);
+	philo->last_meal = getting_curr_time();
+	ft_mutex_error_handler(&philo->args->meal, UNLOCK);
 	ft_mutex_error_handler(&philo->args->forks[philo->left_fork], UNLOCK);
 	ft_mutex_error_handler(&philo->args->forks[philo->right_fork], UNLOCK);
 	if (!is_simulation_ended(philo->args))
@@ -90,6 +93,7 @@ void	philo_spawner(t_global *args)
 		philo->right_fork = i;
 		philo->left_fork = (i + 1) % args->philosophers_nb;
 		philo->meals_nb = 0;
+		philo->it_is_full = false;
 		philo->last_meal = getting_curr_time();
 		philo->args = args;
 		ft_thread_error_handler
